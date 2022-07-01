@@ -62,8 +62,8 @@ const newsService = (function () {
     const apiUrl = 'https://newsapi.org/v2'
 
     return {
-        topHeadLines(country = 'ua', callBack) {
-            httpModule.get(`${apiUrl}/top-headlines?country=${country}&apiKey=${apiKey}`, callBack)
+        topHeadLines(country = 'ua', category = 'general', callBack) {
+            httpModule.get(`${apiUrl}/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}`, callBack)
         },
         everything(query, callBack) {
             httpModule.get(`${apiUrl}/everything?q=${query}&apiKey=${apiKey}`, callBack)
@@ -75,6 +75,7 @@ const newsService = (function () {
 // * form elements
 const form = document.forms['newsControls']
 const countrySelect = form.elements['country']
+const categorySelect = form.elements['category']
 const formInput = form.elements['search']
 
 form.addEventListener('submit', (e) => {
@@ -93,13 +94,13 @@ function loadNews() {
     showLoader()
     const country = countrySelect.value
     const searchText = formInput.value
+    const category = categorySelect.value
 
     if (!searchText) {
-        newsService.topHeadLines(country, onGetResponse)
+        newsService.topHeadLines(country, category, onGetResponse)
     } else {
         newsService.everything(searchText, onGetResponse)
     }
-
 }
 
 // * function on get response from server 
@@ -107,7 +108,9 @@ function onGetResponse(err, response) {
     if (response) {
         removeLoader()
         console.log(response);
+        checkNewsCover(response.articles)
     }
+
     if (err) {
         showAlert(err, 'error-msg')
         return
@@ -119,6 +122,15 @@ function onGetResponse(err, response) {
     }
 
     renderNews(response.articles)
+}
+
+// * function wich check response from server
+function checkNewsCover(newsArr) {
+    newsArr.forEach(newsItem => {
+        if (newsItem.urlToImage === null) {
+            newsItem.urlToImage = 'https://s3.envato.com/files/260793375/Preview.jpg'
+        }
+    })
 }
 
 // * render news function 

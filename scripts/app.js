@@ -107,8 +107,9 @@ function loadNews() {
 function onGetResponse(err, response) {
     if (response) {
         removeLoader()
-        console.log(response);
         checkNewsCover(response.articles)
+        form.reset()
+        renderNews(response.articles)
     }
 
     if (err) {
@@ -116,12 +117,9 @@ function onGetResponse(err, response) {
         return
     }
 
-    if (response.articles.lenght > 1) {
-        // TODO: show empty message
+    if (response.articles.lenght === 0) {
         return
     }
-
-    renderNews(response.articles)
 }
 
 // * function wich check response from server

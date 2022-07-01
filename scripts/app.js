@@ -109,17 +109,17 @@ function onGetResponse(err, response) {
         removeLoader()
         checkNewsCover(response.articles)
         form.reset()
-        renderNews(response.articles)
-    }
 
+    }
     if (err) {
         showAlert(err, 'error-msg')
         return
     }
-
     if (response.articles.lenght === 0) {
         return
     }
+
+    renderNews(response.articles)
 }
 
 // * function wich check response from server

@@ -115,7 +115,9 @@ function onGetResponse(err, response) {
         showAlert(err, 'error-msg')
         return
     }
-    if (response.articles.lenght === 0) {
+
+    if (response.articles.lenght > 1) {
+        showAlert(err, 'error-msg')
         return
     }
 

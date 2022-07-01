@@ -56,7 +56,7 @@ function http() {
 
 const httpModule = http()
 
-// * news service
+// ! news service
 const newsService = (function () {
     const apiKey = '36d4a1e3f8fe4330990d73cec7c3e3d3'
     const apiUrl = 'https://newsapi.org/v2'
@@ -72,6 +72,16 @@ const newsService = (function () {
 
 })()
 
+// * form elements
+const form = document.forms['newsControls']
+const countrySelect = form.elements['country']
+const formInput = form.elements['search']
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    loadNews()
+})
+
 // * init select
 document.addEventListener('DOMContentLoaded', function () {
     M.AutoInit()
@@ -80,16 +90,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ! load news function
 function loadNews() {
-    newsService.topHeadLines('ua', onGetResponse)
+    showLoader()
+    const country = countrySelect.value
+    const searchText = formInput.value
+
+    if (!searchText) {
+        newsService.topHeadLines(country, onGetResponse)
+    } else {
+        newsService.everything(searchText, onGetResponse)
+    }
+
 }
 
 // * function on get response from server 
 function onGetResponse(err, response) {
+    if (response) {
+        removeLoader()
+        console.log(response);
+    }
+    if (err) {
+        showAlert(err, 'error-msg')
+        return
+    }
+
+    if (response.articles.lenght > 1) {
+        // TODO: show empty message
+        return
+    }
+
     renderNews(response.articles)
 }
 
+// * render news function 
 function renderNews(news) {
     const newsContainer = document.querySelector('.grid-container')
+    if (newsContainer.children.length) {
+        clearContainer(newsContainer)
+    }
     let fragment = ''
 
     news.forEach(newsItem => {
@@ -98,14 +135,11 @@ function renderNews(news) {
     })
 
     newsContainer.insertAdjacentHTML('afterbegin', fragment)
-    console.log(fragment);
 
 }
 
-// *     news card template
+// * news card template
 function newsCardTemplate({ urlToImage, title, url, description }) {
-    // console.log(newsItem);
-
     return `
         <div class="col s12">
             <div class="card">
@@ -122,5 +156,31 @@ function newsCardTemplate({ urlToImage, title, url, description }) {
             </div>
         </div>
     `
+}
 
+// * function clear news container
+function clearContainer(container) {
+    container.innerHTML = ''
+}
+
+// * show alerts function
+function showAlert(message, type = 'success') {
+    M.toast({ html: `Error status code: ${message}`, classes: type })
+}
+
+// * show preloader function
+function showLoader() {
+    document.body.insertAdjacentHTML('afterbegin',
+        `<div class="progress">
+            <div class="indeterminate"></div>
+        </div>`
+    )
+}
+
+// * remove preloader function
+function removeLoader() {
+    const loader = document.querySelector('.progress')
+    if (loader) {
+        loader.remove()
+    }
 }

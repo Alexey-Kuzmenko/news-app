@@ -92,9 +92,11 @@ function loadNews() {
     if (!searchQuery) {
         newsService.topHeadLines(country, category)
             .then(data => { onGetResponse(data) })
+            .catch(error => showAlert(error))
     } else {
         newsService.everything(searchQuery)
             .then(data => { onGetResponse(data) })
+            .catch(error => showAlert(error))
     }
 }
 
@@ -166,6 +168,10 @@ function clearContainer(container) {
     container.innerHTML = ''
 }
 
+// * show alerts function
+function showAlert(message, type = 'success') {
+    M.toast({ html: `Error status code: ${message}`, classes: type })
+}
 
 // * show preloader function
 function showLoader() {

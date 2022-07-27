@@ -109,7 +109,6 @@ function onGetResponse(err, response) {
         removeLoader()
         checkNewsCover(response.articles)
         form.reset()
-
     }
     if (err) {
         showAlert(err, 'error-msg')

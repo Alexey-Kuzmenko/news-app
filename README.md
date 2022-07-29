@@ -8,7 +8,7 @@ This project is a part of the JavaScript course. I was made this project to demo
 
 ## Versions
 
-The first version of the News App you can find in master branch. Second version locate on develop branch. Both versions of an app made with Materialize framework: https://materializecss.com/
+The first version of the News App you can find in `master` branch. Second version locate on `develop` branch. Both versions of an app made with Materialize framework: https://materializecss.com/
 
 **Difference between versions:**
 
@@ -17,7 +17,7 @@ The first version of the News App you can find in master branch. Second version 
   - In **`master`** to send requests, I use AJAX technology with **`XMLHttpRequest()`**
   - In the second version, I use **`async/await`** construction with **`fetch()`**
 
-- I use a different API.
+- I use a different API
   - In the first example used **News API:** https://newsapi.org/
   - In the second example **Mediastack API:** https://mediastack.com/
 
